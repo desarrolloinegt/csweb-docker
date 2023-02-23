@@ -25,10 +25,9 @@ RUN set -eux; \
 
 # download and unzip csweb source
 RUN set -eux; \
-	mkdir /var/www/html/csweb; \
+	mkdir /var/www/html/; \
 	curl -o csweb.zip -fSL https://www2.census.gov/software/cspro/download/csweb.zip; \
-	unzip csweb.zip -d /var/www/html/csweb; \
-	echo "<?php phpinfo(); ?>" >  /var/www/html/info.php;\
+	unzip csweb.zip -d /var/www/html/; \
 	chown -R www-data:www-data /var/www/html/; \
 	rm csweb.zip;
 
