@@ -9,8 +9,8 @@ services:
         MYSQL_PASSWORD: "${DB_PASSWORD}"
         DEFAULT_TIMEZONE: "${TIMEZONE}" 
         API_URL: "${API_URL}"
-    #volumes:
-    #  - ./.vols/csweb:/var/www/html/
+    volumes:
+      - ./.vols/csweb-files:/var/www/html/files
     networks:
       - frontend
       - backend
