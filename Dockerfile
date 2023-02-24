@@ -3,10 +3,8 @@ FROM php:7.3-apache
 ARG MYSQL_DATABASE=cspro
 ARG MYSQL_USER=cspro
 ARG MYSQL_PASSWORD=changeme
-ARG DEFAULT_TIMEZONE=UTC
-ARG DEFAULT_TIMEZONE=UTC
-ARG API_URL= http://localhost/csweb/api
-ARG PROXY_PATH= csweb
+ARG API_URL=http://localhost/csweb/api
+ARG PROXY_PATH=csweb
 
 # Use production php settings
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

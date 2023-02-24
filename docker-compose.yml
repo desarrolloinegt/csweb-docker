@@ -7,13 +7,12 @@ services:
         MYSQL_DATABASE: "${DB_NAME}"
         MYSQL_USER: "${DB_USERNAME}"
         MYSQL_PASSWORD: "${DB_PASSWORD}"
-        DEFAULT_TIMEZONE: "${TIMEZONE}" 
         API_URL: "${API_URL}"
         PROXY_PATH: "${PROXY_PATH}"
     volumes:
       - ./.vols/csweb-files:/var/www/html/${PROXY_PATH}/files
     environment:
-      - TZ: "${TIMEZONE}"
+      TZ: "${TIMEZONE}"      
     networks:
       - frontend
       - backend
