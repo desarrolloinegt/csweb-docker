@@ -35,17 +35,17 @@ RUN set -eux; \
 
 
 # configuration file
-# RUN set -eux; \
-# echo "<?php \
-# define('DBHOST', 'mysql');\
-# define('DBUSER', '$MYSQL_USER');\
-# define('DBPASS', '$MYSQL_PASSWORD');\
-# define('DBNAME', '$MYSQL_DATABASE');\
-# define('ENABLE_OAUTH', true);\
-# define('FILES_FOLDER', '/var/www/html/files');\
-# define('DEFAULT_TIMEZONE', '$TIMEZONE');\
-# define('MAX_EXECUTION_TIME', '300');\
-# define('API_URL', '$API_URL');\
-# define('CSWEB_LOG_LEVEL' , 'error');\
-# define('CSWEB_PROCESS_CASES_LOG_LEVEL', 'error');\
-# ?>" > /var/www/html/src/AppBundle
+ RUN set -eux; \
+ echo "<?php \
+ define('DBHOST', 'mysql');\
+ define('DBUSER', '$MYSQL_USER');\
+ define('DBPASS', '$MYSQL_PASSWORD');\
+ define('DBNAME', '$MYSQL_DATABASE');\
+ define('ENABLE_OAUTH', true);\
+ define('FILES_FOLDER', '/var/www/html/$PROXY_PATH/files');\
+ define('DEFAULT_TIMEZONE', '$TIMEZONE');\
+ define('MAX_EXECUTION_TIME', '300');\
+ define('API_URL', '$API_URL');\
+ define('CSWEB_LOG_LEVEL' , 'error');\
+ define('CSWEB_PROCESS_CASES_LOG_LEVEL', 'error');\
+ ?>" > /var/www/html/src/AppBundle

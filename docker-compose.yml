@@ -10,6 +10,7 @@ services:
         DEFAULT_TIMEZONE: "${TIMEZONE}" 
         API_URL: "${API_URL}"
         PROXY_PATH: "${PROXY_PATH}"
+        TZ: "${TIMEZONE}"
     volumes:
       - ./.vols/csweb-files:/var/www/html/${PROXY_PATH}/files
     networks:
@@ -27,7 +28,7 @@ services:
       - "${MYSQL_PORT}:3306"
     volumes:
       - ./.vols/db_data:/var/lib/mysql
-     # - ./mysql/db-init:/docker-entrypoint-initdb.d
+      - ./db-init:/docker-entrypoint-initdb.d
     networks:
       - backend
     environment:
@@ -42,6 +43,7 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
       PMA_ABSOLUTE_URI: '${URL}/${PHPMYADMIN_PATH}/'
+      TZ: "${TIMEZONE}"
     ports:
       - '${PHPMYADMIN_PORT}:80'
     networks:
