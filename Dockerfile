@@ -5,6 +5,7 @@ ARG MYSQL_USER=cspro
 ARG MYSQL_PASSWORD=changeme
 ARG API_URL=http://localhost/csweb/api
 ARG PROXY_PATH=csweb
+ARG TIMEZONE=UTC
 
 # Use production php settings
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

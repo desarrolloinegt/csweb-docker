@@ -9,6 +9,7 @@ services:
         MYSQL_PASSWORD: "${DB_PASSWORD}"
         API_URL: "${API_URL}"
         PROXY_PATH: "${PROXY_PATH}"
+        TIMEZONE: "${TIMEZONE}"
     volumes:
       - ./.vols/csweb-files:/var/www/html/${PROXY_PATH}/files
     environment:
