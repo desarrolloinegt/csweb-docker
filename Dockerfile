@@ -48,4 +48,4 @@ RUN set -eux; \
  define('API_URL', '$API_URL');\
  define('CSWEB_LOG_LEVEL' , 'error');\
  define('CSWEB_PROCESS_CASES_LOG_LEVEL', 'error');\
- ?>" > /var/www/html/src/AppBundle
+ ?>" > /var/www/html/$PROXY_PATH/src/AppBundle

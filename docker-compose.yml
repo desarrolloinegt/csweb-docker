@@ -10,9 +10,10 @@ services:
         DEFAULT_TIMEZONE: "${TIMEZONE}" 
         API_URL: "${API_URL}"
         PROXY_PATH: "${PROXY_PATH}"
-        TZ: "${TIMEZONE}"
     volumes:
       - ./.vols/csweb-files:/var/www/html/${PROXY_PATH}/files
+    environment:
+      - TZ: "${TIMEZONE}"
     networks:
       - frontend
       - backend
