@@ -5,7 +5,8 @@ ARG MYSQL_USER=cspro
 ARG MYSQL_PASSWORD=changeme
 ARG DEFAULT_TIMEZONE=UTC
 ARG DEFAULT_TIMEZONE=UTC
-ARG API_URL= http://localhost/api
+ARG API_URL= http://localhost/csweb/api
+ARG PROXY_PATH= csweb
 
 # Use production php settings
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
@@ -24,11 +25,13 @@ RUN set -eux; \
 	sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # download and unzip csweb source
+
 RUN set -eux; \
 	curl -o csweb.zip -fSL https://www2.census.gov/software/cspro/download/csweb.zip; \
-	unzip csweb.zip -d /var/www/html/; \
+	unzip csweb.zip -d /var/www/html/$PROXY_PATH/; \
 	chown -R www-data:www-data /var/www/html/; \
-	rm csweb.zip;
+	rm csweb.zip;\
+	sed -i "/require __DIR__.'\/vendor\/autoload.php';/a\if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {\n    \$_SERVER['HTTPS'] = 'on';\n}" /var/www/html/$PROXY_PATH/app.php; 
 
 
 # configuration file

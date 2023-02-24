@@ -9,8 +9,9 @@ services:
         MYSQL_PASSWORD: "${DB_PASSWORD}"
         DEFAULT_TIMEZONE: "${TIMEZONE}" 
         API_URL: "${API_URL}"
+        PROXY_PATH: "${PROXY_PATH}"
     volumes:
-      - ./.vols/csweb-files:/var/www/html/files
+      - ./.vols/csweb-files:/var/www/html/${PROXY_PATH}/files
     networks:
       - frontend
       - backend
@@ -40,8 +41,7 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: "${DB_ROOT_PASSWORD}"
+      PMA_ABSOLUTE_URI: '${URL}/${PHPMYADMIN_PATH}/'
     ports:
       - '${PHPMYADMIN_PORT}:80'
     networks:
