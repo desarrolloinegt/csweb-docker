@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
 --
 -- Host: localhost    Database: cspro
 -- ------------------------------------------------------
--- Server version       8.0.32
+-- Server version	8.2.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -32,7 +32,7 @@ CREATE TABLE `cspro_apps` (
   `files` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `signature` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -46,6 +46,77 @@ LOCK TABLES `cspro_apps` WRITE;
 /*!40000 ALTER TABLE `cspro_apps` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cspro_apps` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_apps` BEFORE INSERT ON `cspro_apps` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `cspro_binary_sync_history`
+--
+
+DROP TABLE IF EXISTS `cspro_binary_sync_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cspro_binary_sync_history` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `binary_data_signature` char(32) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `sync_history_id` int unsigned NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `sync_history_id` (`sync_history_id`),
+  CONSTRAINT `cspro_sync_history_archive_id_constraint` FOREIGN KEY (`sync_history_id`) REFERENCES `cspro_sync_history` (`revision`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cspro_binary_sync_history`
+--
+
+LOCK TABLES `cspro_binary_sync_history` WRITE;
+/*!40000 ALTER TABLE `cspro_binary_sync_history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cspro_binary_sync_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cspro_binary_sync_history_archive`
+--
+
+DROP TABLE IF EXISTS `cspro_binary_sync_history_archive`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cspro_binary_sync_history_archive` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `binary_data_signature` char(32) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `sync_history_id` int unsigned NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `sync_history_id` (`sync_history_id`),
+  CONSTRAINT `cspro_sync_history_id_constraint` FOREIGN KEY (`sync_history_id`) REFERENCES `cspro_sync_history` (`revision`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cspro_binary_sync_history_archive`
+--
+
+LOCK TABLES `cspro_binary_sync_history_archive` WRITE;
+/*!40000 ALTER TABLE `cspro_binary_sync_history_archive` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cspro_binary_sync_history_archive` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `cspro_config`
@@ -58,7 +129,7 @@ CREATE TABLE `cspro_config` (
   `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -69,9 +140,24 @@ CREATE TABLE `cspro_config` (
 
 LOCK TABLES `cspro_config` WRITE;
 /*!40000 ALTER TABLE `cspro_config` DISABLE KEYS */;
-INSERT INTO `cspro_config` VALUES ('schema_version','6','2023-02-24 18:51:06','1971-01-01 06:00:00'),('server_device_id','c27386ad-b8db-4d65-a3d0-a01fce32cca4','2023-02-24 18:51:06','1971-01-01 06:00:00');
+INSERT INTO `cspro_config` VALUES ('schema_version','7','2024-02-16 20:30:33','2024-02-16 20:30:33'),('server_device_id','9147ae34-8dcb-4b15-99fe-0b5b080ac471','2024-02-16 20:30:33','2024-02-16 20:30:33');
 /*!40000 ALTER TABLE `cspro_config` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_config` BEFORE INSERT ON `cspro_config` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_dictionaries`
@@ -86,7 +172,7 @@ CREATE TABLE `cspro_dictionaries` (
   `dictionary_label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `dictionary_full_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `dictionary_name` (`dictionary_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -100,6 +186,21 @@ LOCK TABLES `cspro_dictionaries` WRITE;
 /*!40000 ALTER TABLE `cspro_dictionaries` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cspro_dictionaries` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_dictionaries` BEFORE INSERT ON `cspro_dictionaries` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_dictionaries_schema`
@@ -114,9 +215,10 @@ CREATE TABLE `cspro_dictionaries_schema` (
   `schema_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `schema_user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `schema_password` varbinary(255) NOT NULL,
+  `additional_config` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `map_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`dictionary_id`),
   UNIQUE KEY `schema_name` (`schema_name`),
   CONSTRAINT `schema_dict_id_constraint` FOREIGN KEY (`dictionary_id`) REFERENCES `cspro_dictionaries` (`id`) ON DELETE CASCADE
@@ -131,6 +233,21 @@ LOCK TABLES `cspro_dictionaries_schema` WRITE;
 /*!40000 ALTER TABLE `cspro_dictionaries_schema` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cspro_dictionaries_schema` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_dictionaries_schema` BEFORE INSERT ON `cspro_dictionaries_schema` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_permissions`
@@ -143,7 +260,7 @@ CREATE TABLE `cspro_permissions` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Permissions Table';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -154,9 +271,24 @@ CREATE TABLE `cspro_permissions` (
 
 LOCK TABLES `cspro_permissions` WRITE;
 /*!40000 ALTER TABLE `cspro_permissions` DISABLE KEYS */;
-INSERT INTO `cspro_permissions` VALUES (1,'data_all','2023-02-24 18:51:06','1971-01-01 06:00:00'),(2,'apps_all','2023-02-24 18:51:06','1971-01-01 06:00:00'),(3,'users_all','2023-02-24 18:51:06','1971-01-01 06:00:00'),(4,'roles_all','2023-02-24 18:51:06','1971-01-01 06:00:00'),(5,'reports_all','2023-02-24 18:51:06','1971-01-01 06:00:00'),(6,'dictionary_sync_upload','2023-02-24 18:51:06','1971-01-01 06:00:00'),(7,'dictionary_sync_download','2023-02-24 18:51:06','1971-01-01 06:00:00'),(8,'settings_all','2023-02-24 18:51:06','1971-01-01 06:00:00');
+INSERT INTO `cspro_permissions` VALUES (1,'data_all','2024-02-16 20:30:33','2024-02-16 20:30:33'),(2,'apps_all','2024-02-16 20:30:33','2024-02-16 20:30:33'),(3,'users_all','2024-02-16 20:30:33','2024-02-16 20:30:33'),(4,'roles_all','2024-02-16 20:30:33','2024-02-16 20:30:33'),(5,'reports_all','2024-02-16 20:30:33','2024-02-16 20:30:33'),(6,'dictionary_sync_upload','2024-02-16 20:30:33','2024-02-16 20:30:33'),(7,'dictionary_sync_download','2024-02-16 20:30:33','2024-02-16 20:30:33'),(8,'settings_all','2024-02-16 20:30:33','2024-02-16 20:30:33');
 /*!40000 ALTER TABLE `cspro_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_permissions` BEFORE INSERT ON `cspro_permissions` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_role_dictionary_permissions`
@@ -170,7 +302,7 @@ CREATE TABLE `cspro_role_dictionary_permissions` (
   `dictionary_id` smallint unsigned NOT NULL,
   `permission_id` int unsigned NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   KEY `cspro_role_dictionary_role_id_constraint` (`role_id`),
   KEY `cspro_role_dictionary_id_constraint` (`dictionary_id`),
   KEY `cspro_role_dictionary_permission_id_constraint` (`permission_id`),
@@ -188,6 +320,21 @@ LOCK TABLES `cspro_role_dictionary_permissions` WRITE;
 /*!40000 ALTER TABLE `cspro_role_dictionary_permissions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cspro_role_dictionary_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_role_dictionary_permissions` BEFORE INSERT ON `cspro_role_dictionary_permissions` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_role_permissions`
@@ -200,7 +347,7 @@ CREATE TABLE `cspro_role_permissions` (
   `role_id` int unsigned NOT NULL,
   `permission_id` int unsigned NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   KEY `cspro_role_id_constraint` (`role_id`),
   KEY `cspro_permission_id_constraint` (`permission_id`),
   CONSTRAINT `cspro_permission_id_constraint` FOREIGN KEY (`permission_id`) REFERENCES `cspro_permissions` (`id`) ON DELETE CASCADE,
@@ -216,6 +363,21 @@ LOCK TABLES `cspro_role_permissions` WRITE;
 /*!40000 ALTER TABLE `cspro_role_permissions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cspro_role_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_role_permissions` BEFORE INSERT ON `cspro_role_permissions` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_roles`
@@ -228,7 +390,7 @@ CREATE TABLE `cspro_roles` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `rolename_unique` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Roles Table';
@@ -240,9 +402,24 @@ CREATE TABLE `cspro_roles` (
 
 LOCK TABLES `cspro_roles` WRITE;
 /*!40000 ALTER TABLE `cspro_roles` DISABLE KEYS */;
-INSERT INTO `cspro_roles` VALUES (1,'Standard User','2023-02-24 18:51:06','1971-01-01 06:00:00'),(2,'Administrator','2023-02-24 18:51:06','1971-01-01 06:00:00');
+INSERT INTO `cspro_roles` VALUES (1,'Standard User','2024-02-16 20:30:33','2024-02-16 20:30:33'),(2,'Administrator','2024-02-16 20:30:33','2024-02-16 20:30:33');
 /*!40000 ALTER TABLE `cspro_roles` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_roles` BEFORE INSERT ON `cspro_roles` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `cspro_sync_history`
@@ -258,6 +435,8 @@ CREATE TABLE `cspro_sync_history` (
   `dictionary_id` smallint unsigned NOT NULL,
   `universe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `direction` enum('put','get','both') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_case_revision` int unsigned DEFAULT NULL,
+  `last_case_guid` binary(16) DEFAULT NULL,
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`revision`),
   KEY `dictionary_id` (`dictionary_id`),
@@ -290,7 +469,7 @@ CREATE TABLE `cspro_users` (
   `phone` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `role` int unsigned NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_time` timestamp NULL DEFAULT '1971-01-01 06:00:00',
+  `created_time` timestamp NULL DEFAULT '1971-01-01 00:00:00',
   PRIMARY KEY (`username`),
   KEY `role` (`role`),
   CONSTRAINT `role_id_constraint` FOREIGN KEY (`role`) REFERENCES `cspro_roles` (`id`)
@@ -303,9 +482,24 @@ CREATE TABLE `cspro_users` (
 
 LOCK TABLES `cspro_users` WRITE;
 /*!40000 ALTER TABLE `cspro_users` DISABLE KEYS */;
-INSERT INTO `cspro_users` VALUES ('admin','$2y$10$IdtmAMutU6PYh9E3fQFXHexGbgOYI3.n3..oRZQKZpYshGc1vvWvO','System','Administrator',NULL,NULL,2,'2023-02-24 18:51:06','1971-01-01 06:00:00');
+INSERT INTO `cspro_users` VALUES ('admin','$2y$10$tswPoEqdS7gfj3kPQCp1bOiboe1YG9ZIXY7r8sVzJUW6HX0Wgzvoe','System','Administrator',NULL,NULL,2,'2024-02-16 20:30:33','2024-02-16 20:30:33');
 /*!40000 ALTER TABLE `cspro_users` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`cspro`@`%`*/ /*!50003 TRIGGER `tr_cspro_users` BEFORE INSERT ON `cspro_users` FOR EACH ROW SET NEW.`created_time` = CURRENT_TIMESTAMP */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `oauth_access_tokens`
@@ -330,7 +524,7 @@ CREATE TABLE `oauth_access_tokens` (
 
 LOCK TABLES `oauth_access_tokens` WRITE;
 /*!40000 ALTER TABLE `oauth_access_tokens` DISABLE KEYS */;
-INSERT INTO `oauth_access_tokens` VALUES ('4f2351e14c685c83715e61238d9b84c7d76b3ce2','cspro_android','admin','2023-02-24 19:51:06',NULL),('936f94bc984179abbfb448e6423cc113aeacdbf6','cspro_android','admin','2023-02-24 19:51:16',NULL);
+INSERT INTO `oauth_access_tokens` VALUES ('202afa49d3602b560634c0237050831d10d5dd51','cspro_android','admin','2024-02-16 21:30:34',NULL),('b727c9743e5c0fb3ff1db88b6a049f6a13e35d33','cspro_android','admin','2024-02-16 21:30:45',NULL);
 /*!40000 ALTER TABLE `oauth_access_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -436,7 +630,7 @@ CREATE TABLE `oauth_refresh_tokens` (
 
 LOCK TABLES `oauth_refresh_tokens` WRITE;
 /*!40000 ALTER TABLE `oauth_refresh_tokens` DISABLE KEYS */;
-INSERT INTO `oauth_refresh_tokens` VALUES ('c37133c575e4938bafc11307053193631d68c18d','cspro_android','admin','2023-03-10 18:51:06',NULL),('a6b3c1c66ce6ad1bf35248c780aeda39032d5ce2','cspro_android','admin','2023-03-10 18:51:16',NULL);
+INSERT INTO `oauth_refresh_tokens` VALUES ('7a3d8c99ea8adc1e9ac803e754311f13d387d327','cspro_android','admin','2024-03-01 20:30:34',NULL),('f42607f7766975e43e383592bd97294d647043c3','cspro_android','admin','2024-03-01 20:30:45',NULL);
 /*!40000 ALTER TABLE `oauth_refresh_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -496,4 +690,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-24 12:53:31
+-- Dump completed on 2024-02-16 14:42:59
