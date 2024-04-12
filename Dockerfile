@@ -8,7 +8,8 @@ ARG PROXY_PATH=csweb
 ARG TIMEZONE=UTC
 
 # Use production php settings
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY php.ini "$PHP_INI_DIR/php.ini"
 
 # php-zip support
 RUN set -eux; \
