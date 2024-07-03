@@ -37,8 +37,22 @@ RUN set -eux; \
  RUN set -eux; \
  echo "<?php define('DBHOST', 'mysql'); define('DBUSER', '$MYSQL_USER'); define('DBPASS', '$MYSQL_PASSWORD'); define('DBNAME', '$MYSQL_DATABASE'); define('ENABLE_OAUTH', true); define('FILES_FOLDER', '/var/www/html/$PROXY_PATH/files'); define('DEFAULT_TIMEZONE', '$TIMEZONE'); define('MAX_EXECUTION_TIME', '300'); define('API_URL', '$API_URL'); define('CSWEB_LOG_LEVEL' , 'error'); define('CSWEB_PROCESS_CASES_LOG_LEVEL', 'error'); ?>" > /var/www/html/$PROXY_PATH/src/AppBundle/config.php
 
- #Cronjob to process CASES 
+# Instalación de cron y otras dependencias necesarias
 RUN set -eux; \
-apt-get update; \ 
-apt-get install -y cron; \
-&& echo "*/15  * * * *   root    php /var/www/html/$PROXY_PATH/bin/console csweb:process-cases" >> /etc/crontab
+    apt-get update; \
+    apt-get install -y cron; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
+
+# Configuración del cron job
+RUN echo "*/15 * * * * root /var/www/html/$PROXY_PATH/bin/console csweb:process-cases" > /etc/cron.d/csweb-process-cases \
+    && chmod 0644 /etc/cron.d/csweb-process-cases
+
+# Script de inicio para Apache y cron
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["apache2-foreground"]
+
+
