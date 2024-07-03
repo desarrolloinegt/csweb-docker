@@ -14,8 +14,6 @@ COPY php.ini "$PHP_INI_DIR/php.ini"
 # php-zip support
 RUN set -eux; \
 	apt-get update; \
-	sed -i "s#deb http://deb.debian.org/debian buster main#deb http://deb.debian.org/debian buster main contrib non-free#g" /etc/apt/sources.list; \
-	apt-get update; \
 	apt-get install -y zlib1g-dev libzip-dev unzip; \
 	docker-php-ext-install zip; \
 	docker-php-ext-install pdo_mysql
