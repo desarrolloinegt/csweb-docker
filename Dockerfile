@@ -16,7 +16,7 @@ RUN set -eux; \
 	apt-get update; \
 	apt-get install -y zlib1g-dev libzip-dev unzip; \
 	docker-php-ext-install zip; \
-	docker-php-ext-install pdo_mysql
+	docker-php-ext-install pdo_mysql 
 
 # enable mod_rewrite and allow override from .htacess files
 RUN set -eux; \
@@ -38,6 +38,7 @@ RUN set -eux; \
  echo "<?php define('DBHOST', 'mysql'); define('DBUSER', '$MYSQL_USER'); define('DBPASS', '$MYSQL_PASSWORD'); define('DBNAME', '$MYSQL_DATABASE'); define('ENABLE_OAUTH', true); define('FILES_FOLDER', '/var/www/html/$PROXY_PATH/files'); define('DEFAULT_TIMEZONE', '$TIMEZONE'); define('MAX_EXECUTION_TIME', '300'); define('API_URL', '$API_URL'); define('CSWEB_LOG_LEVEL' , 'error'); define('CSWEB_PROCESS_CASES_LOG_LEVEL', 'error'); ?>" > /var/www/html/$PROXY_PATH/src/AppBundle/config.php
 
  #Cronjob to process CASES 
-
-RUN set -eux;\
-echo "*/15  * * * *   root    php /var/www/html/$PROXY_PATH/bin/console csweb:process-cases" >> /etc/crontab
+RUN set -eux; \
+apt-get update; \ 
+apt-get install -y cron; \
+&& echo "*/15  * * * *   root    php /var/www/html/$PROXY_PATH/bin/console csweb:process-cases" >> /etc/crontab
