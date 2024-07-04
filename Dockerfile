@@ -46,7 +46,7 @@ RUN set -eux; \
 
 # Configuración del cron job
 RUN echo "*/15 * * * * root /var/www/html/$PROXY_PATH/bin/console csweb:process-cases" > /etc/cron.d/csweb-process-cases \
-    && chmod 755 "/var/www/html/$PROXY_PATH/bin/console csweb:process-cases"
+    && chmod 755 /var/www/html/$PROXY_PATH/bin/console csweb:process-cases
 
 # Script de inicio para Apache y cron
 COPY docker-entrypoint.sh /usr/local/bin/
