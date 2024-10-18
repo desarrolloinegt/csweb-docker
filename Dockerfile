@@ -14,10 +14,9 @@ COPY php.ini "$PHP_INI_DIR/php.ini"
 # php-zip support
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y zlib1g-dev libzip-dev unzip; \
+	apt-get install -y zlib1g-dev libzip-dev unzip cron; \
 	docker-php-ext-install zip; \
 	docker-php-ext-install pdo_mysql 
-
 # enable mod_rewrite and allow override from .htacess files
 RUN set -eux; \
 	a2enmod rewrite; \
@@ -45,14 +44,19 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 # Configuración del cron job
-RUN echo "*/15 * * * * root /var/www/html/$PROXY_PATH/bin/console csweb:process-cases" > /etc/cron.d/csweb-process-cases; \
-    chmod 755 /var/www/html/$PROXY_PATH/bin/console
+RUN chmod 755 /var/www/html/$PROXY_PATH/bin/console
+
+RUN echo "*/2 * * * * www-data php /var/www/html/${PROXY_PATH}/bin/console csweb:process-cases >> /var/log/cron.log 2>&1" > /etc/cron.d/process-cases && \
+    chmod 0644 /etc/cron.d/process-cases && \
+    crontab /etc/cron.d/process-cases 
+
+
 
 # Script de inicio para Apache y cron
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
 
 
