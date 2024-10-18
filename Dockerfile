@@ -17,6 +17,7 @@ RUN set -eux; \
 	apt-get install -y zlib1g-dev libzip-dev unzip cron; \
 	docker-php-ext-install zip; \
 	docker-php-ext-install pdo_mysql 
+
 # enable mod_rewrite and allow override from .htacess files
 RUN set -eux; \
 	a2enmod rewrite; \
@@ -25,7 +26,7 @@ RUN set -eux; \
 # download and unzip csweb source
 
 RUN set -eux; \
-	curl -o csweb.zip -fSL https://www.csprousers.org/downloads/cspro/csweb8.0.zip; \
+	curl -o csweb.zip -fSL https://www.csprousers.org/downloads/cspro/csweb8.0.1.zip; \
 	unzip csweb.zip -d /var/www/html/$PROXY_PATH/; \
 	chown -R www-data:www-data /var/www/html/; \
 	rm csweb.zip;\
