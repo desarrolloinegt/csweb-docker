@@ -32,7 +32,7 @@ services:
       - "${MYSQL_PORT}:3306"
     volumes:
       - ./.vols/db_data:/var/lib/mysql
-      - ./db-init:/docker-entrypoint-initdb.d
+      - ./mysql/db-init:/docker-entrypoint-initdb.d
     networks:
       - backend
     environment:

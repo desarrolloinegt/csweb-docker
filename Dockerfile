@@ -7,6 +7,7 @@ ARG API_URL=http://localhost/csweb/api
 ARG PROXY_PATH=csweb
 ARG TIMEZONE=UTC
 
+ENV PROXY_PATH=${PROXY_PATH}
 # Use production php settings
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY php.ini "$PHP_INI_DIR/php.ini"
