@@ -48,7 +48,7 @@ RUN set -eux; \
 # Configuración del cron job
 RUN chmod 755 /var/www/html/$PROXY_PATH/bin/console
 
-RUN echo "*/2 * * * * www-data php /var/www/html/${PROXY_PATH}/bin/console csweb:process-cases >> /var/log/cron.log 2>&1" > /etc/cron.d/process-cases && \
+RUN echo "*/2 * * * * php /var/www/html/${PROXY_PATH}/bin/console csweb:process-cases >> /var/log/cron.log 2>&1" > /etc/cron.d/process-cases && \
     chmod 0644 /etc/cron.d/process-cases && \
     crontab /etc/cron.d/process-cases 
 
