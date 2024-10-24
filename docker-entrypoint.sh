@@ -1,8 +1,10 @@
 #!/bin/bash
 set -e
 
-# Start cron
-cron
+# Cambiar permisos para el directorio csweb-files
+chown -R www-data:www-data /var/www/html/${PROXY_PATH}/files
 
-# Start Apache in the foreground
-exec apache2-foreground
+# Iniciar cron en segundo plano
+service cron start
+
+exec "$@"

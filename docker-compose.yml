@@ -23,7 +23,7 @@ services:
       - mysql
   mysql:
     build:
-      context: ./mysql
+      context: './mysql/'
       args:
         MYSQL_VERSION: ${MYSQL_VERSION:-latest}
     command: ['--default-authentication-plugin=mysql_native_password']
